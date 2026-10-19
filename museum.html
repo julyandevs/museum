@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Online Art Gallery | A Digital Philippine Heritage Gallery</title>
+<link rel="icon" type="image/png" href="bg/logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<script>
+  /* Visitors reach the gallery through the loader (index.html) only */
+  if (sessionStorage.getItem('openedFromLoader') === 'true') {
+    sessionStorage.removeItem('openedFromLoader');
+  } else {
+    location.replace('index.html');
+  }
+</script>
+</head>
+<body>
+
+<a class="skip-link" href="#gallery">Skip to the collection</a>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+<audio id="bgMusic" src="audio/background-music.mp3" loop preload="auto" playsinline></audio>
+
+<!-- ============ HEADER ============ -->
+<header class="site-header" id="siteHeader">
+  <div class="header-inner">
+    <a href="#home" class="logo" aria-label="Online Art Gallery, back to the top">
+      <span class="logo-text">Online Art Gallery</span>
+      <span class="logo-sub">A Digital Philippine Heritage Gallery</span>
+    </a>
+
+    <nav class="main-nav" id="mainNav" aria-label="Main">
+      <a href="#home" class="nav-link">Home</a>
+      <a href="#gallery" class="nav-link">Collection</a>
+      <a href="#artists" class="nav-link">Artists</a>
+      <a href="#artisans" class="nav-link">Artisans</a>
+      <a href="#about" class="nav-link">About</a>
+    </nav>
+
+    <div class="header-actions">
+      <button type="button" class="sound-toggle" id="soundToggle" aria-pressed="false">
+        <span class="bars" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span id="soundLabel">Music off</span>
+      </button>
+      <button type="button" class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mainNav">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="home" aria-labelledby="heroTitle">
+  <div class="hero-media">
+    <img src="bg/wall.png" alt="Featured hero artwork displayed in the main gallery hall" class="hero-image">
+    <div class="hero-scrim"></div>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-kicker">A private collection, opened to the public</p>
+    <h1 class="hero-title" id="heroTitle">Online<br>Art Gallery.</h1>
+    <p class="hero-desc">Every artwork has a story. Every story deserves to be seen.</p>
+    <div class="hero-actions">
+      <a href="#gallery" class="btn btn-primary">Explore the Collection</a>
+      <a href="#about" class="text-link">About the museum</a>
+    </div>
+  </div>
+
+  <a href="#featured" class="hero-scroll-cue" aria-label="Scroll to featured works">
+    <span></span>
+    Scroll
+  </a>
+</section>
+
+<!-- ============ FEATURED (every work, one at a time) ============ -->
+<section class="featured" id="featured" aria-labelledby="featuredHeading">
+  <div class="section-head">
+    <h2 class="section-title" id="featuredHeading">Featured this season</h2>
+    <div class="rule"></div>
+  </div>
+
+  <div class="featured-slider" id="featuredSlider">
+    <div class="featured-track" id="featuredTrack"><!-- injected by script.js --></div>
+
+    <div class="featured-controls">
+      <button type="button" class="round-btn" id="featuredPrev" aria-label="Previous artwork">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+      <div class="featured-dots" id="featuredDots"></div>
+      <span class="featured-count" id="featuredCount" aria-live="polite">1 / 1</span>
+      <button type="button" class="round-btn" id="featuredNext" aria-label="Next artwork">
+        <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- ============ COLLECTION ============ -->
+<section class="gallery-section" id="gallery" aria-labelledby="galleryHeading">
+  <div class="section-head">
+    <h2 class="section-title" id="galleryHeading">The Collection</h2>
+    <div class="rule"></div>
+  </div>
+
+  <div class="collection-tools">
+    <div class="filter-list" id="filterList" role="group" aria-label="Filter by where the work is held"><!-- injected by script.js --></div>
+    <div class="search">
+      <label for="gallerySearch" class="sr-only">Search artworks by title or artist</label>
+      <input type="search" id="gallerySearch" placeholder="Search by title or artist" autocomplete="off">
+    </div>
+  </div>
+
+  <p class="result-count" id="resultCount" aria-live="polite"></p>
+
+  <div class="gallery-grid" id="galleryGrid"><!-- injected by script.js --></div>
+  <p class="gallery-empty" id="galleryEmpty" hidden>No artworks match your search.</p>
+</section>
+
+<!-- ============ ARTWORK VIEW (modal) ============ -->
+<div class="modal" id="artworkModal" aria-hidden="true">
+  <div class="modal-dialog" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button type="button" class="modal-close" id="modalClose" aria-label="Close artwork details">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    </button>
+    <button type="button" class="modal-nav modal-nav-prev" id="modalPrev" aria-label="Previous artwork">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    </button>
+    <button type="button" class="modal-nav modal-nav-next" id="modalNext" aria-label="Next artwork">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+    </button>
+
+    <div class="modal-image-wrap">
+      <img src="" alt="" id="modalImage">
+    </div>
+
+    <div class="modal-info">
+      <div class="modal-topline">
+        <p class="modal-eyebrow" id="modalCategory"></p>
+        <p class="modal-pos" id="modalPos"></p>
+      </div>
+      <h3 class="modal-title" id="modalTitle"></h3>
+
+      <dl class="modal-meta">
+        <div><dt>Artwork by</dt><dd id="modalArtist"></dd></div>
+        <div><dt>Location</dt><dd id="modalLocation"></dd></div>
+        <div><dt>Photograph by</dt><dd id="modalName"></dd></div>
+      </dl>
+
+      <h4 class="modal-label">Description</h4>
+      <p class="modal-desc" id="modalDesc"></p>
+
+      <h4 class="modal-label">Meaning</h4>
+      <p class="modal-desc modal-meaning" id="modalMeaning"></p>
+
+      <a class="modal-reference" id="modalReference" href="#" target="_blank" rel="noopener">Learn more<span class="sr-only"> (opens in a new tab)</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ARTISTS ============ -->
+<section class="artists-section" id="artists" aria-labelledby="artistsHeading">
+  <div class="section-head">
+    <h2 class="section-title" id="artistsHeading">Top 3 Filipino Artists</h2>
+    <div class="rule"></div>
+  </div>
+
+  <div class="artists-grid">
+    <article class="artist-card">
+      <div class="artist-photo-wrap"><img src="artist/amorsolo.png" alt="Fernando Amorsolo" loading="lazy"></div>
+      <h3 class="artist-name">Fernando Amorsolo</h3>
+      <p class="artist-bio">A renowned Filipino painter known for his luminous landscapes, rural scenes, and distinctive use of light.</p>
+      <p class="artist-count">National Artist for Visual Arts</p>
+    </article>
+
+    <article class="artist-card">
+      <div class="artist-photo-wrap"><img src="artist/juan_luna.png" alt="Juan Luna" loading="lazy"></div>
+      <h3 class="artist-name">Juan Luna</h3>
+      <p class="artist-bio">A celebrated Filipino painter whose historical and classical works gained international recognition during the 19th century.</p>
+      <p class="artist-count">National Artist for Visual Arts</p>
+    </article>
+
+    <article class="artist-card">
+      <div class="artist-photo-wrap"><img src="artist/cabrera.jpg" alt="Benedicto Cabrera" loading="lazy"></div>
+      <h3 class="artist-name">Benedicto Cabrera</h3>
+      <p class="artist-bio">A contemporary Filipino painter and printmaker whose works explore Filipino identity, history, and everyday life.</p>
+      <p class="artist-count">National Artist for Visual Arts</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ ARTISANS ============ -->
+<section class="artists-section" id="artisans" aria-labelledby="artisansHeading">
+  <div class="section-head">
+    <h2 class="section-title" id="artisansHeading">Top 3 Filipino Artisans</h2>
+    <div class="rule"></div>
+  </div>
+
+  <div class="artists-grid">
+    <article class="artist-card">
+      <div class="artist-photo-wrap"><img src="artist/dulay.jpg" alt="Lang Dulay" loading="lazy"></div>
+      <h3 class="artist-name">Lang Dulay</h3>
+      <p class="artist-bio">A T'boli master weaver celebrated for preserving the traditional art of T'nalak weaving and its intricate patterns.</p>
+      <p class="artist-count">National Living Treasure</p>
+    </article>
+
+    <article class="artist-card">
+      <div class="artist-photo-wrap"><img src="artist/monon.jpg" alt="Salinta Monon" loading="lazy"></div>
+      <h3 class="artist-name">Salinta Monon</h3>
+      <p class="artist-bio">A renowned Bagobo textile weaver recognized for her mastery of traditional abaca weaving and intricate traditional designs.</p>
+      <p class="artist-count">National Living Treasure</p>
+    </article>
+
+    <article class="artist-card">
+      <div class="artist-photo-wrap"><img src="artist/garcia.jpg" alt="Teofilo Garcia" loading="lazy"></div>
+      <h3 class="artist-name">Teofilo Garcia</h3>
+      <p class="artist-bio">A master craftsman from Abra known for creating traditional tabungaw hats from native gourd and plant materials.</p>
+      <p class="artist-count">National Living Treasure</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ ABOUT ============ -->
+<section class="about-section" id="about" aria-labelledby="aboutHeading">
+  <div class="about-grid">
+    <div class="about-text">
+      <p class="section-eyebrow-sm">About the museum</p>
+      <h2 class="about-title" id="aboutHeading">Bringing art, culture, and history closer to everyone.</h2>
+
+      <p class="about-para">
+        Our Digital Museum is an online space dedicated to showcasing
+        artworks, celebrating creativity, and preserving the beauty of
+        art and cultural heritage. Designed to make art more accessible,
+        our platform allows visitors to explore remarkable artworks
+        and discover the stories behind them anytime, anywhere.
+      </p>
+
+      <p class="about-para">
+        Open to the public, our digital collection welcomes students,
+        researchers, art enthusiasts, and anyone interested in exploring
+        the world of art. Each artwork offers an opportunity to learn
+        about its artist, historical background, artistic style, and
+        cultural significance.
+      </p>
+
+      <p class="about-para">
+        Through this digital experience, we aim to inspire curiosity,
+        encourage appreciation for artistic expression, and make art
+        accessible to a wider audience. Whether you are discovering
+        famous masterpieces or exploring new artistic perspectives,
+        our museum invites you to experience the beauty and meaning
+        of art from wherever you are.
+      </p>
+
+      <dl class="about-stats">
+        <div><dt>Public Access</dt><dd>Open</dd></div>
+        <div><dt>Explore our collection</dt><dd>Online</dd></div>
+        <div><dt>Works in this online collection</dt><dd id="collectionCount">26</dd></div>
+      </dl>
+    </div>
+
+    <div class="about-image-wrap">
+      <img src="bg/national_musuem_bg.png" alt="National Museum of Fine Arts in Manila" loading="lazy">
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="footer-top">
+    <div>
+      <p class="footer-name">Online Art Gallery</p>
+      <p class="footer-desc">A Digital Philippine Heritage Gallery. Preserving the nation's story, one artifact at a time.</p>
+    </div>
+
+    <nav class="footer-col" aria-label="Footer">
+      <h4>Explore</h4>
+      <a href="#featured">Featured</a>
+      <a href="#gallery">Collection</a>
+      <a href="#artists">Artists</a>
+      <a href="#artisans">Artisans</a>
+      <a href="#about">About</a>
+    </nav>
+
+    <div class="footer-col">
+      <h4>Project</h4>
+      <p>OLHUM001 · Final project · Group 4</p>
+      <p>Hiyas ng Kasaysayan</p>
+      <p>OLTA211A001SC</p>
+    </div>
+  </div>
+
+  <div class="footer-bottom">
+    <span>Online Art Gallery</span>
+    <a href="#home">Back to the top</a>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
